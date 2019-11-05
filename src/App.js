@@ -1,26 +1,30 @@
-import React from 'react';
-import logo from './logo.svg';
+import React,{ Component } from 'react';
+// import logo from './logo.svg';
+import { Route,Switch,BrowserRouter } from 'react-router-dom';
+
+import { Provider } from "react-redux";
+import { createStore,applyMiddleware } from "redux";
+import thunk from 'redux-thunk'
 import './App.css';
+import appReducers from "./reducers";
+import NotFound from './components/notFound';
+import Player from './components/player';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export default class AppRouter extends Component {
+  constructor(props) {
+    super(props)
+    this.store=createStore(appReducers,applyMiddleware(thunk));
+  }
+  render() {
+    return (
+      <Provider store={this.store}>
+        <BrowserRouter>
+          <Switch>
+            <Route path="/player" component={Player} />
+            <Route component={NotFound} />
+          </Switch>
+        </BrowserRouter>
+      </Provider>
+    );
+  }
 }
-
-export default App;
